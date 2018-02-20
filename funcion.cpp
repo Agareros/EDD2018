@@ -7,7 +7,7 @@
 using namespace std;
 
 listaProducto *listaProductos;
-bool escribeProductos(){
+/*bool escribeProductos(){
 
     QTextStream archivo;
     archivo.open("Productos.dot");
@@ -24,7 +24,19 @@ bool escribeProductos(){
 
         return true;
     }
-}
+}*/
+bool escribeProductos(){
+    std::ofstream archivo;
+    archivo.open("Productos.dot");
+    if(archivo.fail()){
+        return false;
+    }
+    else {
+        listaProductos->escribirProducto();
+        archivo.close();
+        system("dot -Tpng Productos.dot -o Productos.png");
+        return true;
+    }
 
 /*
 void imagen(QString cuerpo, const QString codigo){

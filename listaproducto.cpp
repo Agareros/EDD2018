@@ -208,7 +208,7 @@ bool NodoProducto::equals(NodoProducto *varios){
     return this->Codigo == varios->Codigo;
 }
 
-void listaProducto::escribirProducto(QTextStream &archivo){
+void listaProducto::escribirProducto(std::ofstream &archivo){
     archivo << "digraph g{" << std::endl;
     archivo << "node [shape=box];" << std::endl;
     archivo << "label=\"PRODUCTO" << " Productos " << "\";" << std::endl;

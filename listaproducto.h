@@ -61,7 +61,9 @@ public:
     void llenarTabla(QTableWidget* tablas);
 
     //void escribirProducto(std::stringstream &archivo);
-    void escribirProducto(QTextStream &archivo);
+    void escribirProducto(std::ofstream &archivo);
+
+    //void escribirProducto(QTextStream &archivo);
     void escribirProductos(std::stringstream &archivo);
     void enlistaProductoDOT(std::stringstream &archivo);
     void graficarProducto(listaProducto *listas);

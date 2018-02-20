@@ -65,7 +65,7 @@ void MainWindow::updateCustomerTable(){
 
 void MainWindow::on_pushButton_clicked()
 {
-    if(escribeProductos())
+    /*if(escribeProductos())
     {
         QPixmap img("Productos.png");
         QLabel* l = new QLabel();
@@ -78,6 +78,17 @@ void MainWindow::on_pushButton_clicked()
     //imagen(lista->cuerpo(),"producto");
 
 }
+*/
+    if(escribeProductos()){
+        QPixmap img("Productos.png");
+        QLabel* l = new QLabel();
+        d = l;
+        l->setPixmap(img);
+        l->setFixedSize(img.size());
+        l->repaint();
+        lay->addWidget(l);
+        ui->scrollAreaP->setLayout(lay);
+    }
 }
 
 /*/oid MainWindow::ponerimagen(QString codigo){
