@@ -28,13 +28,17 @@ SOURCES += \
         mainwindow.cpp \
     listaproducto.cpp \
     lecturajson.cpp \
-    funcion.cpp
+    funcion.cpp \
+    clientes.cpp \
+    factura.cpp
 
 HEADERS += \
         mainwindow.h \
     listaproducto.h \
     lecturajson.h \
-    funcion.h
+    funcion.h \
+    clientes.h \
+    factura.h
 
 FORMS += \
         mainwindow.ui

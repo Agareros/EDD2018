@@ -1,14 +1,17 @@
 #include "listaproducto.h"
 #include <QString>
+#include <QFile>
+#include <QTextStream>
 #include <iostream>
 #include <fstream>
-#include <ostream>
-#include <sstream>
+
+
 listaProducto::listaProducto()
 {
-this->cantidad=0;
+    this->cantidad=0;
     this->inicio=NULL;
     this->final=NULL;
+
 }
 
 void listaProducto::insertar(NodoProducto *nodo){
@@ -18,6 +21,7 @@ void listaProducto::insertar(NodoProducto *nodo){
 }
 
 void listaProducto::insertar(NodoProducto *nodo, NodoProducto *a, NodoProducto *z, int rango){
+
     int izquierda = nodo->compare(a);
     int derecha = nodo->compare(z);
     if(izquierda < 0){
@@ -33,7 +37,7 @@ void listaProducto::insertar(NodoProducto *nodo, NodoProducto *a, NodoProducto *
     }
     rango = rango/2;
     NodoProducto* pivote = a;
-    for(int i=0; i< rango && pivote!=NULL && pivote->siguiente!=NULL; i++){
+    for(int i=0; i< rango && pivote->siguiente!=this->inicio; i++){
         pivote = pivote->siguiente;
     }
     int centrar = nodo->compare(pivote);
@@ -57,7 +61,7 @@ void listaProducto::insertar(NodoProducto *nodo, NodoProducto *a, NodoProducto *
     }
 
 void listaProducto::insertarAntes(NodoProducto *nodo, NodoProducto *pivote){
-    if(pivote->anterior==NULL){
+    if(pivote->anterior==this->final){
         insertarPrimero(nodo);
     } else {
         pivote->anterior->siguiente=nodo;
@@ -68,9 +72,23 @@ void listaProducto::insertarAntes(NodoProducto *nodo, NodoProducto *pivote){
     }
 }
 
+
+void listaProducto::insertarFinal(NodoProducto* nodo){
+    nodo->anterior=this->final;
+    nodo->siguiente = this->inicio;
+    this->inicio->anterior=nodo;
+    this->final->siguiente=nodo;
+    this->final=nodo;
+    this->cantidad++;
+}
+
 void listaProducto::insertarDespues(NodoProducto *nodo, NodoProducto *pivote){
-    if(pivote->siguiente==NULL){
-insertarFinal(nodo);
+    NodoProducto *temporal = pivote->siguiente;
+    NodoProducto *temporal2 = this->inicio;
+    QString valor1= temporal->getCodigo();
+    QString valor2= temporal2->getCodigo();
+    if(valor1.compare(valor2)==0){
+        insertarFinal(nodo);
     }
     else {
         pivote->siguiente->anterior=nodo;
@@ -79,38 +97,41 @@ insertarFinal(nodo);
         nodo->anterior=pivote;
         cantidad++;
     }
-    }
-
-void listaProducto::insertarFinal(NodoProducto* nodo){
-    this->final->siguiente=nodo;
-    nodo->anterior = this->final;
-    this->final = nodo;
-    this->cantidad++;
 }
+
 
 void listaProducto::insertarPrimero(NodoProducto *nodo){
     nodo->siguiente=this->inicio;
+    nodo->anterior=this->final;
     this->inicio->anterior=nodo;
-    this->inicio = nodo;
+    this->final->siguiente=nodo;
+    this->inicio=nodo;
     this->cantidad++;
 }
 
 bool listaProducto::primeraInsercion(NodoProducto *nodo){
     if(this->inicio == NULL && this->final == NULL){
-        this->inicio=nodo;
-        this->final=nodo;
-        this->cantidad++;
-        return true;
+       nodo->siguiente=nodo;
+       nodo->anterior=nodo;
+       this->inicio=nodo;
+       this->final=nodo;
+       this->cantidad++;
+       return true;
     }
     return false;
 }
 
 void listaProducto::llenarTabla(QTableWidget *tablas){
+    if(tamao()==0){
+        tablas->clearContents();
+    }
+
     if(this->inicio==NULL)
         return;
     NodoProducto* temporal = this->inicio;
     tablas->clearContents();
-    for(int i=0; temporal!= NULL; i++){
+    int i=0;
+    do {
         QTableWidgetItem* codigoObjeto = new QTableWidgetItem(temporal->getCodigo());
         QTableWidgetItem* precioObjeto = new QTableWidgetItem(temporal->getPrecio());
         QTableWidgetItem* nombreObjeto = new QTableWidgetItem(temporal->getNombre());
@@ -121,7 +142,92 @@ void listaProducto::llenarTabla(QTableWidget *tablas){
         tablas->setItem(i,2,nombreObjeto);
         tablas->setItem(i,3,descripcionObjeto);
         temporal=temporal->siguiente;
+        i++;
     }
+    while (temporal!=this->inicio);
+}
+
+void listaProducto::llenarCodigo(QTableWidget *tablas){
+    if(this->inicio==NULL)
+        return;
+    NodoProducto * temporal = this->inicio;
+    tablas->clear();
+    for(int i=0; temporal =NULL; i++){
+        QTableWidgetItem* codigoObjeto = new QTableWidgetItem(temporal->getCodigo());
+        tablas->setRowCount(i+1);
+        tablas->setItem(i,0,codigoObjeto);
+        temporal=temporal->siguiente;
+    }
+}
+
+/*
+bool listaProducto::yaExiste(NodoProducto *nodo){
+    if(!estaVacio()){
+        NodoProducto *temporal = this->inicio->siguiente;
+        QString compara;
+        while (temporal!=this->inicio) {
+            compara =temporal->getCodigo();
+            if(nodo->compare(compara)==0)
+            {
+        return true;
+    }
+            temporal=temporal->siguiente;
+        }
+         return false;
+    }
+    else {
+        return false;
+    }}
+*/
+
+/*void listaProducto::eliminarProducto(QString *codigo){
+NodoProducto *auxiliar = this->inicio;
+if(auxiliar!=NULL){
+    while ((auxiliar->siguiente!=this->inicio)&&(auxiliar->getCodigo().compare(codigo)!=0)&&tamao()==1) {
+        auxiliar=auxiliar->siguiente;
+
+    }
+    if(auxiliar->getCodigo().compare(codigo)==0){
+        i
+    }
+}
+}*/
+
+void listaProducto::eliminarListaProducto(QString nombre){
+    NodoProducto *temporal = new NodoProducto();
+    NodoProducto *auxiliar = new NodoProducto();
+    temporal=this->inicio;
+    auxiliar=this->final;
+    bool elim=false;
+    if(inicio!=NULL){
+do{
+            if(temporal->getCodigo().compare(nombre)==0 && temporal==this->inicio && tamao()==1){
+        auxiliar = this->inicio;
+        temporal->siguiente=NULL;
+        temporal->anterior=NULL;
+        this->inicio=NULL;
+        this->final=NULL;
+        cantidad=0;
+        elim=true;
+
+    }
+            if(temporal->getCodigo().compare(nombre)==0 && temporal==this->inicio){
+                temporal->anterior->siguiente=temporal->siguiente;
+                temporal->siguiente->anterior=temporal->anterior;
+                this->inicio=temporal->siguiente;
+                elim=true;
+            }
+            else if (temporal->getCodigo().compare(nombre)==0 && tamao()>1){
+                temporal->anterior->siguiente=temporal->siguiente;
+                temporal->siguiente->anterior=temporal->anterior;
+                elim=true;
+            }
+            temporal=temporal->siguiente;
+           } while (auxiliar!=this->inicio && !elim && tamao()!=0); {
+                auxiliar=NULL;
+            }
+
+            }
 }
 
 void listaProducto::editar(NodoProducto *antiguo, NodoProducto *nodo){
@@ -208,76 +314,46 @@ bool NodoProducto::equals(NodoProducto *varios){
     return this->Codigo == varios->Codigo;
 }
 
-void listaProducto::escribirProducto(std::ofstream &archivo){
-    archivo << "digraph g{" << std::endl;
-    archivo << "node [shape=box];" << std::endl;
-    archivo << "label=\"PRODUCTO" << " Productos " << "\";" << std::endl;
-    NodoProducto *aux = this->inicio->siguiente;
-    while(aux!=NULL)
-        {
-            if(aux->siguiente!=NULL)
+
+void listaProducto::escribirProducto(){
+NodoProducto *aux = this->inicio;
+    QFile file("out.dot");
+    if (!file.open(QFile::WriteOnly | QFile::Text))
+return;
+    {
+     {
+        if(this->cantidad>0){
+
+            QTextStream out(&file);
+            out << "digraph g {\n";
+            out << "node [shape=box];" << "\n";
+            out << "label=\"PRODUCTO" << " Productos " << "\";" << "\n";
+            out.flush();
+
+            while(aux!=NULL)
             {
-                archivo << "\"CODIGO: " << aux->Codigo<< " | Nom: " << aux->Nombre << " | Precio: " << aux->siguiente->Precio << "\"->\"Codigo: " <<  aux->siguiente->Codigo << " | Nombre: " << aux->siguiente->Nombre << " | Precio: " << aux->siguiente->Precio << "\";" << std::endl;
+
+                if(aux->siguiente!=NULL)
+                {
+                    out << "\"CODIGO: " << aux->getCodigo() << " | Nom: " << aux->getNombre() << " | Precio: " << aux->getPrecio() << "\"->\"Codigo: " <<  aux->siguiente->getCodigo() << " | Nombre: " << aux->siguiente->getNombre() << " | Precio: " << aux->siguiente->getPrecio() << "\";" << "\n";
+                }
+                else
+                {
+                    out << "\"Codigo: " << aux->getCodigo() << " | Nombre: " << aux->getNombre() << " | Precio: " << aux->getPrecio() << "\";" << "\n";
+                }
+                aux=aux->siguiente;
             }
-            else
-            {
-                archivo << "\"Codigo: " << aux->Codigo << " | Nombre: " << aux->Nombre << " | Precio: " << aux->Precio << "\";" << std::endl;
-            }
-            aux = aux->siguiente;
+            out << "}" << "\n";
+            out.atEnd();
+            system("dot -Tpng out.dot -o out.png");
+
         }
+        else{
 
-    archivo << "}" << std::endl;
-}
-
-
-/*/void listaProducto::escribirProducto(std::ofstream &archivo){
-    archivo << "digraph g{" << std::endl;
-    archivo << "node [shape=box];" << std::endl;
-    archivo << "label=\"PRODUCTO" << " Productos " << "\";" << std::endl;
-    NodoProducto *aux = this->inicio->siguiente;
-    while(aux!=NULL)
-        {
-            if(aux->siguiente!=NULL)
-            {
-                archivo << "\"CODIGO: " << aux->Codigo<< " | Nom: " << aux->Nombre.toStdString() << " | Precio: " << aux->siguiente->Precio << "\"->\"Codigo: " <<  aux->siguiente->Codigo.toStdString() << " | Nombre: " << aux->siguiente->Nombre.toStdString() << " | Precio: " << aux->siguiente->Precio.toStdString() << "\";" << std::endl;
-            }
-            else
-            {
-                archivo << "\"Codigo: " << aux->Codigo << " | Nombre: " << aux->Nombre << " | Precio: " << aux->Precio.toStdString() << "\";" << std::endl;
-            }
-            aux = aux->siguiente;
-        }
-
-    archivo << "}" << std::endl;
-}
-/*/
-/*
-listaProducto::graficarProducto(listaProducto *listas){
-    QString grafica = "digraph G{\n";
-    int contar =1;
-    NodoProducto *auxiliar = listas->inicio;
-    while (auxiliar->siguiente!=NULL && contador<6) {
-        QTextStream ms;
-        ms<<auxiliar;
-        QString puntero1 =
-
-    }
-}
-*/
-
-/*/
-QString listaProducto::cuerpo(){
-    QString cuerpo="";
-    if(this->inicio!=NULL){
-        NodoProducto *auxiliar = this->inicio;
-        while (auxiliar!=NULL) {
-            cuerpo +=auxiliar->Codigo + ";\n";
-            if(auxiliar->siguiente!=NULL){
-                cuerpo +=auxiliar->Codigo + " -> " + auxiliar->siguiente->Nombre + ";\n";
-            }
-            auxiliar = auxiliar->siguiente;
         }
     }
-    return cuerpo;
+    }
 }
-*/
+
+
+

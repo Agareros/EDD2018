@@ -12,10 +12,7 @@ private:
 
 
 public:
-    QString Codigo;
-    QString Nombre;
-    QString Precio;
-    QString Descripcion;
+
     NodoProducto* siguiente;
     NodoProducto* anterior;
     NodoProducto();
@@ -30,6 +27,10 @@ public:
     void setNombre(QString Nombre);
     void setDescripcion(QString Descripcion);
     void setPrecio(QString Precio);
+    QString Codigo;
+    QString Nombre;
+    QString Precio;
+    QString Descripcion;
 
 };
 
@@ -59,9 +60,13 @@ public:
     int tamao();
     bool estaVacio();
     void llenarTabla(QTableWidget* tablas);
+        void llenarCodigo(QTableWidget* tablas);
 
+    bool eliminarProducto(QString* codigo);
+    bool yaExiste(NodoProducto *nodo);
+    void eliminarListaProducto(QString nombre);
     //void escribirProducto(std::stringstream &archivo);
-    void escribirProducto(std::ofstream &archivo);
+    void escribirProducto();
 
     //void escribirProducto(QTextStream &archivo);
     void escribirProductos(std::stringstream &archivo);

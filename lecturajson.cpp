@@ -42,3 +42,39 @@ void lecturaJson::fillListFromFile(listaProducto *list, QByteArray json) {
     QString resume = QString::asprintf("Se cargaron correctamente %d de %d registros en %f milisegundos.", list->tamao(), max, ((double)t / CLOCKS_PER_SEC) * 1000);
     QMessageBox::information(NULL, "Rendimiento lista doble", resume);
 }
+
+
+void lecturaJson::fillListFromFileCliente(Clientes *lista, QByteArray jsonC) {
+    QJsonDocument docu = QJsonDocument::fromJson(jsonC);
+    if(! docu.isArray()){
+        QMessageBox::warning(NULL, "JSON Clientes", "Error en el archivo, el elemento raíz debe ser un arreglo");
+        return;
+    }
+    QJsonArray array = docu.array();
+    int max = array.size();
+
+    clock_t t;
+    t = clock();
+    for(int i = 0; i < max; i++) {
+        QJsonValueRef ref = array[i];
+        if(! ref.isObject())
+            continue;
+        QJsonObject objeto = ref.toObject();
+
+                QJsonValue nombreJson = objeto["nombre"];
+                if(nombreJson.isUndefined() || nombreJson.isNull())
+                    continue;
+                QJsonValue nitJson = objeto["NIT"];
+                        if(nitJson.isUndefined() || nitJson.isNull())
+                            continue;
+                QJsonValue facturaJson = objeto["facturas"];
+                if(facturaJson.isUndefined() || facturaJson.isNull() )
+                    continue;
+
+                lista->insertar(new NodoCliente(nitJson.toString(), nombreJson.toString(), facturaJson.toInt()));
+    }
+    t = clock() - t;
+    //QString resume = QString::asprintf("Se cargaron correctamente %d de %d registros en %ld ciclos de reloj.", list->size(), max, t);
+    QString resume = QString::asprintf("Se cargaron correctamente %d de %d registros en %f milisegundos.", lista->tamao(), max, ((double)t / CLOCKS_PER_SEC) * 1000);
+    QMessageBox::information(NULL, "Rendimiento lista simple", resume);
+}

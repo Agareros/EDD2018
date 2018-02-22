@@ -303,7 +303,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_10">
        <attribute name="title">
@@ -430,7 +430,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit_17">
+        <widget class="QLineEdit" name="insertarNit">
          <property name="font">
           <font>
            <family>MV Boli</family>
@@ -453,7 +453,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_18">
+        <widget class="QLineEdit" name="insertarNombreC">
          <property name="font">
           <font>
            <family>MV Boli</family>
@@ -476,7 +476,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_19">
+        <widget class="QLineEdit" name="insertarComprar">
          <property name="font">
           <font>
            <family>MV Boli</family>
@@ -538,7 +538,7 @@
        <string>MODIFICAR</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_15">
+     <widget class="QComboBox" name="comboEditarCliente">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -592,7 +592,7 @@
        <string>ELIMINAR</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_7">
+     <widget class="QComboBox" name="comboEliminarCliente">
       <property name="geometry">
        <rect>
         <x>30</x>

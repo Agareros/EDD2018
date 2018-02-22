@@ -30,7 +30,7 @@ listaProducto *listaProductos;
 
 bool escribeProductos(){   
 
-           listaProductos->escribirProducto();
+          listaProductos->escribirProducto();
 
 
 }
